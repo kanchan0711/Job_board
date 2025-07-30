@@ -38,5 +38,4 @@ This is a full-stack job board web application built as part of the Knovator Tec
 
 ---
 
-## 📁 Project Structure
 
