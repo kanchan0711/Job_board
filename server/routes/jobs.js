@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Job = require('../models/Job');
+const Job = require('../modals/job');
 
 // Get all jobs
 router.get('/', async (req, res) => {
@@ -20,18 +20,22 @@ router.get('/:id', async (req, res) => {
 
 // Add new job
 router.post('/', async (req, res) => {
-  try {
-    const { title, company, type, location, description } = req.body;
-    if (!title || !company || !type || !location || !description) {
-      return res.status(400).json({ error: 'All fields required' });
+    try {
+      const { title, company, type, location, description } = req.body;
+  
+      // Server-side validation
+      if (!title || !company || !type || !location || !description) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+  
+      const newJob = new Job({ title, company, type, location, description });
+      await newJob.save();
+  
+      res.status(201).json(newJob);
+    } catch (err) {
+      res.status(500).json({ error: 'Server error' });
     }
-
-    const newJob = new Job({ title, company, type, location, description });
-    await newJob.save();
-    res.status(201).json(newJob);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+  });
+  
 
 module.exports = router;
